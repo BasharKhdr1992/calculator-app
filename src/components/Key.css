@@ -1,0 +1,17 @@
+.key {
+  width: 20%;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+  font-weight: 900;
+  font-size: 24px;
+  border-radius: 8px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.last {
+  width: 42%;
+}

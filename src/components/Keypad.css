@@ -1,0 +1,15 @@
+.keypad {
+  width: 50%;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.keys_row {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  margin: auto;
+  justify-content: center;
+}
