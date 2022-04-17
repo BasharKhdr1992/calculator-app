@@ -13,3 +13,9 @@
   margin: auto;
   justify-content: center;
 }
+
+@media screen and (max-width: 1000px) {
+  .keypad {
+    width: 90%;
+  }
+}
