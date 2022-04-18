@@ -93,7 +93,11 @@ const App = () => {
   const theme = Themes[selectedTheme];
 
   return (
-    <div className="main" role="main" style={{ backgroundColor: theme.mainBg }}>
+    <div
+      className="wrapper"
+      role="main"
+      style={{ backgroundColor: theme.mainBg }}
+    >
       <Header
         theme={theme}
         selectedTheme={selectedTheme}

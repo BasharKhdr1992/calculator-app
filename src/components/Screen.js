@@ -24,7 +24,7 @@ const Screen = ({ result, theme }) => {
   }
 
   return (
-    <div className="screen" role="main" style={styles}>
+    <div className="screen" style={styles}>
       {result}
     </div>
   );
