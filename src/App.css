@@ -17,13 +17,14 @@
   flex-direction: row;
 }
 
-.header h2 {
+.header h1 {
   width: 60%;
 }
 
-.header h2,
+.header h1,
 .theme h2 {
   align-self: flex-end;
+  margin-right: 10px;
 }
 
 .theme {

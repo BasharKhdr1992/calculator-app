@@ -24,13 +24,9 @@ const Header = ({ theme, selectedTheme, handleThemeChange }) => {
 
   return (
     <div className="header">
-      <header>
-        <h1 style={styles}>Calc</h1>
-      </header>
+      <h1 style={styles}>Calc</h1>
       <div className="theme">
-        <header>
-          <h2 style={styles}>Theme</h2>
-        </header>
+        <h2 style={styles}>Theme</h2>
         <Toggle
           onThemeChange={handleThemeChange}
           selectedTheme={selectedTheme}
