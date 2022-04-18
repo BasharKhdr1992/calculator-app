@@ -100,7 +100,7 @@ const Keypad = ({ onUpdateScreen, theme }) => {
   };
 
   return (
-    <div className="keypad" style={keypadStyles}>
+    <div className="keypad" role="main" style={keypadStyles}>
       <div className="keys_row">
         <RenderKeyRow
           keyHandler={keyHandler}

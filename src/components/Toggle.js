@@ -23,7 +23,7 @@ const Toggle = ({ selectedTheme, onThemeChange }) => {
 
   return (
     <div>
-      <div className="title-container">
+      <div className="title-container" role="main">
         <div className="title" style={{ color: textColor }}>
           1
         </div>
