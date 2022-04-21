@@ -35,13 +35,13 @@ const App = () => {
       case 'x':
         return l * r;
       case '/':
-        return l / r;
+        return l / parseFloat(r);
       default:
         return l;
     }
   };
 
-  const orderOperators = (numbers, operators) => {
+  const joinOperatorsAndNumbers = (numbers, operators) => {
     let exp_index = 0;
     let operationsAr = [];
 
@@ -53,26 +53,7 @@ const App = () => {
       exp_index++;
     }
 
-    return operationsAr.sort(compareOperators);
-  };
-
-  const rewriteExpression = (operationsAr) => {
-    let fixedExpression = '';
-
-    fixedExpression +=
-      operationsAr[0].l + operationsAr[0].operator + operationsAr[0].r;
-
-    for (let i = 1; i < operationsAr.length; i++) {
-      fixedExpression += operationsAr[i].operator;
-
-      if (fixedExpression.includes(operationsAr[i].l)) {
-        fixedExpression += +operationsAr[i].r;
-      } else {
-        fixedExpression += +operationsAr[i].l;
-      }
-    }
-
-    return fixedExpression;
+    return operationsAr;
   };
 
   const splitExpression = (exp) => {
@@ -82,24 +63,60 @@ const App = () => {
     return { numbers, operators };
   };
 
+  const rewriteExpression = (operationsAr) => {
+    let intermediateExpression = '';
+    let i = 0;
+    for (let el of operationsAr) {
+      if (i === 0) {
+        intermediateExpression += el.l + el.operator + el.r;
+      } else {
+        if (intermediateExpression.includes(el.l)) {
+          intermediateExpression += el.operator + el.r;
+        } else {
+          intermediateExpression += el.operator + el.l;
+        }
+      }
+      i++;
+    }
+
+    return intermediateExpression;
+  };
+
   const evaluateExpression = (result) => {
     let { numbers, operators } = splitExpression(result);
 
-    let operationsAr = orderOperators(numbers, operators);
+    let operationsAr = joinOperatorsAndNumbers(numbers, operators);
 
-    let fixedExpression = rewriteExpression(operationsAr);
+    for (let i = 0; i < operationsAr.length; i++) {
+      let el = operationsAr[i];
+      let temp;
 
-    let numbersAndOperators = splitExpression(fixedExpression);
+      if (el.operator === 'x' || el.operator === '/') {
+        temp = getIntermediateResult(+el.l, +el.r, el.operator);
+        if (i > 0) {
+          operationsAr[i - 1].r = temp.toString();
+        }
+        if (i < operationsAr.length - 1) {
+          operationsAr[i + 1].l = temp.toString();
+        }
+      }
+    }
 
-    numbers = numbersAndOperators.numbers;
-    operators = numbersAndOperators.operators;
+    operationsAr = operationsAr.filter(
+      (el) => el.operator === '+' || el.operator === '-'
+    );
 
-    let acc = numbers[0];
-    let exp_index = 0;
-
-    for (let i = 1; i < numbers.length; i++) {
-      acc = getIntermediateResult(+acc, +numbers[i], operators[exp_index]);
-      exp_index++;
+    let acc = getIntermediateResult(
+      +operationsAr[0].l,
+      +operationsAr[0].r,
+      operationsAr[0].operator
+    );
+    for (let i = 1; i < operationsAr.length; i++) {
+      acc = getIntermediateResult(
+        acc,
+        +operationsAr[i].r,
+        operationsAr[i].operator
+      );
     }
 
     return acc;
