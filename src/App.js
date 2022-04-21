@@ -5,22 +5,6 @@ import './App.css';
 import Keypad from './components/Keypad';
 import Themes from './data/themes';
 
-const compareOperators = (a, b) => {
-  if (
-    (a.operator === 'x' || a.operator === '/') &&
-    (b.operator === '+' || b.operator === '-')
-  ) {
-    return -1;
-  } else if (
-    (b.operator === 'x' || b.operator === '/') &&
-    (a.operator === '+' || a.operator === '-')
-  ) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
 const App = () => {
   const [selectedTheme, setSelectedTheme] = useState(0);
 
@@ -61,25 +45,6 @@ const App = () => {
     let operators = exp.split(/\d+|\.\d+/g).filter((op) => op !== '');
 
     return { numbers, operators };
-  };
-
-  const rewriteExpression = (operationsAr) => {
-    let intermediateExpression = '';
-    let i = 0;
-    for (let el of operationsAr) {
-      if (i === 0) {
-        intermediateExpression += el.l + el.operator + el.r;
-      } else {
-        if (intermediateExpression.includes(el.l)) {
-          intermediateExpression += el.operator + el.r;
-        } else {
-          intermediateExpression += el.operator + el.l;
-        }
-      }
-      i++;
-    }
-
-    return intermediateExpression;
   };
 
   const evaluateExpression = (result) => {
