@@ -5,6 +5,22 @@ import './App.css';
 import Keypad from './components/Keypad';
 import Themes from './data/themes';
 
+const compareOperators = (a, b) => {
+  if (
+    (a.operator === 'x' || a.operator === '/') &&
+    (b.operator === '+' || b.operator === '-')
+  ) {
+    return -1;
+  } else if (
+    (b.operator === 'x' || b.operator === '/') &&
+    (a.operator === '+' || a.operator === '-')
+  ) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
 const App = () => {
   const [selectedTheme, setSelectedTheme] = useState(0);
 
@@ -25,16 +41,64 @@ const App = () => {
     }
   };
 
-  const evaluateExpression = (result) => {
-    const numbers = result.split(/[+|\-|x|/]/g);
-    const operators = result.split(/\d+|\.\d+/g).filter((op) => op !== '');
-    let acc = +numbers[0];
+  const orderOperators = (numbers, operators) => {
     let exp_index = 0;
-    let r;
+    let operationsAr = [];
+
+    for (let i = 0; i < numbers.length - 1; i++) {
+      operationsAr = [
+        ...operationsAr,
+        { l: numbers[i], r: numbers[i + 1], operator: operators[exp_index] },
+      ];
+      exp_index++;
+    }
+
+    return operationsAr.sort(compareOperators);
+  };
+
+  const rewriteExpression = (operationsAr) => {
+    let fixedExpression = '';
+
+    fixedExpression +=
+      operationsAr[0].l + operationsAr[0].operator + operationsAr[0].r;
+
+    for (let i = 1; i < operationsAr.length; i++) {
+      fixedExpression += operationsAr[i].operator;
+
+      if (fixedExpression.includes(operationsAr[i].l)) {
+        fixedExpression += +operationsAr[i].r;
+      } else {
+        fixedExpression += +operationsAr[i].l;
+      }
+    }
+
+    return fixedExpression;
+  };
+
+  const splitExpression = (exp) => {
+    let numbers = exp.split(/[+|\-|x|/]/g);
+    let operators = exp.split(/\d+|\.\d+/g).filter((op) => op !== '');
+
+    return { numbers, operators };
+  };
+
+  const evaluateExpression = (result) => {
+    let { numbers, operators } = splitExpression(result);
+
+    let operationsAr = orderOperators(numbers, operators);
+
+    let fixedExpression = rewriteExpression(operationsAr);
+
+    let numbersAndOperators = splitExpression(fixedExpression);
+
+    numbers = numbersAndOperators.numbers;
+    operators = numbersAndOperators.operators;
+
+    let acc = numbers[0];
+    let exp_index = 0;
 
     for (let i = 1; i < numbers.length; i++) {
-      r = +numbers[i];
-      acc = getIntermediateResult(acc, r, operators[exp_index]);
+      acc = getIntermediateResult(+acc, +numbers[i], operators[exp_index]);
       exp_index++;
     }
 
