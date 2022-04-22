@@ -58,6 +58,9 @@ const App = () => {
 
       if (el.operator === 'x' || el.operator === '/') {
         temp = getIntermediateResult(+el.l, +el.r, el.operator);
+
+        if (operationsAr.length === 1) return temp;
+
         if (i > 0) {
           operationsAr[i - 1].r = temp.toString();
         }
@@ -67,20 +70,26 @@ const App = () => {
       }
     }
 
-    operationsAr = operationsAr.filter(
+    let operationsFilteredAr = operationsAr.filter(
       (el) => el.operator === '+' || el.operator === '-'
     );
 
+    if (operationsFilteredAr.length === 0) {
+      const el = operationsAr[operationsAr.length - 1];
+
+      return getIntermediateResult(+el.l, +el.r, el.operator);
+    }
+
     let acc = getIntermediateResult(
-      +operationsAr[0].l,
-      +operationsAr[0].r,
-      operationsAr[0].operator
+      +operationsFilteredAr[0].l,
+      +operationsFilteredAr[0].r,
+      operationsFilteredAr[0].operator
     );
-    for (let i = 1; i < operationsAr.length; i++) {
+    for (let i = 1; i < operationsFilteredAr.length; i++) {
       acc = getIntermediateResult(
         acc,
-        +operationsAr[i].r,
-        operationsAr[i].operator
+        +operationsFilteredAr[i].r,
+        operationsFilteredAr[i].operator
       );
     }
 
